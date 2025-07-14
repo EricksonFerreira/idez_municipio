@@ -32,26 +32,35 @@ jobs:
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql, xml, ctype, json, tokenizer, bcmath, fileinfo
         coverage: none
     
-    - name: Copy .env
+    - name: Copiando .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
     
-    - name: Install Dependencies
+    - name: Configurando Cache do Composer
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+    
+    - name: Instalando as Dependências
       run: |
-        composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        composer install -q --no-ansi --no-interaction --no-progress --prefer-dist
         php artisan key:generate
     
-    - name: Generate app key
+    - name: Gerando a Chave da Aplicação
       run: php artisan key:generate
     
-    - name: Directory Permissions
+    - name: Permissões do diretório
       run: chmod -R 777 storage bootstrap/cache
     
-    - name: Create Database
+    - name: Criando o Banco de Dados
       run: |
         mysql -h 127.0.0.1 -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS test_db;"
         mysql -h 127.0.0.1 -u root -ppassword -e "GRANT ALL PRIVILEGES ON test_db.* TO 'test_user'@'%' IDENTIFIED BY 'password';"
     
-    - name: Execute tests (Unit and Feature tests) via PHPUnit
+    - name: Executando os Testes (Unit and Feature tests) via PHPUnit
       env:
         DB_CONNECTION: mysql
         DB_DATABASE: test_db
@@ -64,6 +73,6 @@ jobs:
         php artisan migrate:fresh --env=testing --force
         php artisan test
     
-    - name: Upload coverage to Codecov
+    - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v3
       if: success() && github.event_name == 'push'
