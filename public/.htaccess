@@ -22,15 +22,13 @@
     RewriteCond %{REQUEST_URI} ^/api [NC]
     RewriteRule ^ index.php [L]
 
-    # Se o arquivo ou diretório não existir, encaminhe para o index.html do frontend
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ / [L,QSA]
+    # Se for um arquivo ou diretório existente, sirva-o diretamente
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
 
-    # Se o arquivo ou diretório não existir, mas a requisição não for para a API, use o index.html
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ /index.html [L]
+    # Se não for um arquivo ou diretório, redirecione para o index.html
+    RewriteRule ^ index.html [L]
 </IfModule>
 
 # Habilite a compressão GZIP

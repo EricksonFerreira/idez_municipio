@@ -5,96 +5,74 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Municípios do Brasil</title>
-    <base href="/" />
+    <base href="./" />
     <!-- Carrega o Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="/assets/js/main.CRMsJ8iV.js"></script>
-    <link rel="modulepreload" href="/assets/js/vue.CwvEpeDt.js">
-    <link rel="modulepreload" href="/assets/js/vendor.IRYbH52S.js">
-    <link rel="stylesheet" href="/assets/css/main.CexIZqTz.css">
+    <script type="module" src="./assets/js/main.CRMsJ8iV.js"></script>
+    <link rel="modulepreload" href="./assets/js/vue.CwvEpeDt.js">
+    <link rel="modulepreload" href="./assets/js/vendor.IRYbH52S.js">
+    <link rel="stylesheet" href="./assets/css/main.CexIZqTz.css">
     <script>
-      console.log('Iniciando carregamento da aplicação...');
-      window.addEventListener('error', function(event) {
-        console.error('Erro capturado:', event.error);
-        logDebug('Erro capturado: ' + (event.error?.message || event.error || 'Erro desconhecido'));
-      });
-      window.addEventListener('unhandledrejection', function(event) {
-        console.error('Erro não tratado na promise:', event.reason);
-        logDebug('Erro não tratado na promise: ' + (event.reason?.message || event.reason || 'Erro desconhecido'));
-      });
-      
-      // Função para exibir mensagens de depuração na página
-      function logDebug(message) {
-        console.log(message);
-        const debugLog = document.getElementById('debug-log');
-        const debugInfo = document.getElementById('debug-info');
-        if (debugLog && debugInfo) {
-          const timestamp = new Date().toISOString().substr(11, 12);
-          debugLog.textContent += `[${timestamp}] ${message}\n`;
-          debugInfo.scrollTop = debugInfo.scrollHeight; // Auto-scroll para a última mensagem
-          debugInfo.classList.remove('hidden');
-        }
-      }
-    </script>
-  </head>
+          console.log('Iniciando carregamento da aplicação...');
+          window.addEventListener('error', function(event) {
+            console.error('Erro capturado:', event.error);
+          });
+          window.addEventListener('unhandledrejection', function(event) {
+            console.error('Erro não tratado na promise:', event.reason);
+          });
+        </script>
+      </head>
   <body class="bg-gray-50">
     <div id="app">
+          <div class="flex items-center justify-center min-h-screen">
+            <div class="text-center">
+              <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+              <p class="mt-4 text-gray-600">Carregando aplicação...</p>
+              <div id="debug-info" class="mt-4 p-4 bg-gray-100 rounded-md text-left text-sm text-gray-700 max-w-md mx-auto hidden">
+                <h3 class="font-bold mb-2">Informações de Depuração:</h3>
+                <pre id="debug-log" class="whitespace-pre-wrap"></pre>
+              </div>
+            </div>
+          </div>
       <div class="flex items-center justify-center min-h-screen">
         <div class="text-center">
           <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
           <p class="mt-4 text-gray-600">Carregando aplicação...</p>
-          <div id="debug-info" class="mt-4 p-4 bg-gray-100 rounded-md text-left text-sm text-gray-700 max-w-2xl mx-auto hidden">
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="font-bold">Informações de Depuração:</h3>
-              <button onclick="document.getElementById('debug-info').classList.add('hidden')" class="text-gray-500 hover:text-gray-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </div>
-            <pre id="debug-log" class="whitespace-pre-wrap font-mono text-xs bg-white p-2 rounded border border-gray-200 max-h-64 overflow-y-auto"></pre>
-          </div>
         </div>
       </div>
     </div>
     <script>
-      // Verifica se o Vue foi carregado corretamente
-      window.addEventListener('DOMContentLoaded', () => {
-        logDebug('DOM totalmente carregado');
-        
-        // Verifica se o elemento #app foi substituído pelo Vue
-        const checkVueMounted = setInterval(() => {
-          const appElement = document.getElementById('app');
-          if (appElement && appElement.children.length > 0) {
-            const firstChild = appElement.children[0];
-            // Verifica se o conteúdo foi substituído (não é mais o loading)
-            if (!firstChild.classList || !firstChild.classList.contains('flex')) {
-              logDebug('Vue foi montado com sucesso');
-              clearInterval(checkVueMounted);
+          // Função para exibir mensagens de depuração na página
+          function logDebug(message) {
+            console.log(message);
+            const debugLog = document.getElementById('debug-log');
+            const debugInfo = document.getElementById('debug-info');
+            if (debugLog && debugInfo) {
+              debugLog.textContent += message + '
+';
+              debugInfo.scrollTop = debugInfo.scrollHeight; // Auto-scroll para a última mensagem
+              debugInfo.classList.remove('hidden');
             }
           }
-        }, 500);
 
-        // Timeout para garantir que não fique verificando para sempre
-        setTimeout(() => {
-          clearInterval(checkVueMounted);
-        }, 10000);
-      });
-      
-      // Adiciona botão de depuração flutuante
-      document.addEventListener('DOMContentLoaded', () => {
-        const debugButton = document.createElement('button');
-        debugButton.innerHTML = '🐛';
-        debugButton.className = 'fixed bottom-4 right-4 bg-blue-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-xl z-50';
-        debugButton.title = 'Mostrar/ocultar depuração';
-        debugButton.onclick = () => {
-          const debugInfo = document.getElementById('debug-info');
-          if (debugInfo) {
-            debugInfo.classList.toggle('hidden');
-          }
-        };
-        document.body.appendChild(debugButton);
-      });
-    </script>
-  </body>
+          // Verifica se o Vue foi carregado corretamente
+          window.addEventListener('DOMContentLoaded', () => {
+            logDebug('DOM totalmente carregado');
+            
+            // Verifica se o elemento #app foi substituído pelo Vue
+            const checkVueMounted = setInterval(() => {
+              const appElement = document.getElementById('app');
+              if (appElement && appElement.children.length > 1) {
+                logDebug('Vue parece ter sido montado com sucesso');
+                clearInterval(checkVueMounted);
+              }
+            }, 500);
+
+            // Timeout para garantir que não fique verificando para sempre
+            setTimeout(() => {
+              clearInterval(checkVueMounted);
+            }, 10000);
+          });
+        </script>
+      </body>
 </html>

@@ -74,7 +74,7 @@ const createHtmlPlugin = () => ({
 })
 
 export default defineConfig({
-  base: '/',
+  base: './', // Usando caminho relativo para funcionar em subdiretórios
   root: './',
   publicDir: 'public',
   plugins: [
