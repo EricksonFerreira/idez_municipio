@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import MunicipiosList from '@/views/MunicipiosList.vue'
 
 const routes = [
@@ -16,8 +16,12 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  history: createWebHashHistory(),
+  routes,
+  scrollBehavior() {
+    // Sempre rola para o topo ao mudar de rota
+    return { top: 0 }
+  }
 })
 
 export default router
