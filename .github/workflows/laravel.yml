@@ -28,9 +28,10 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.1'
+        php-version: '8.2'
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql, xml, ctype, json, tokenizer, bcmath, fileinfo
         coverage: none
+        tools: composer:v2
     
     - name: Copiando .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
