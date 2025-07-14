@@ -1,0 +1,160 @@
+openapi: 3.0.0
+info:
+  title: API de Municípios Brasileiros
+  description: |
+    API para consulta de municípios brasileiros por Unidade Federativa (UF).
+    
+    Esta API permite consultar municípios de qualquer estado brasileiro, com suporte a paginação e cache.
+  version: 1.0.0
+  contact:
+    name: Suporte
+    email: suporte@exemplo.com
+
+servers:
+  - url: http://localhost:8000/api
+    description: Servidor de desenvolvimento
+  - url: https://api.exemplo.com/v1
+    description: Servidor de produção
+
+paths:
+  /municipios/{uf}:
+    get:
+      summary: Lista municípios por UF
+      description: Retorna uma lista paginada de municípios para a UF especificada
+      parameters:
+        - name: uf
+          in: path
+          required: true
+          description: Sigla da Unidade Federativa (2 caracteres)
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 2
+            example: PE
+        - name: page
+          in: query
+          description: Número da página
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          description: Quantidade de itens por página (máx. 100)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Lista de municípios retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MunicipioPaginado'
+        '400':
+          description: Formato de UF inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '404':
+          description: Nenhum município encontrado para a UF especificada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
+components:
+  schemas:
+    Municipio:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nome do município
+          example: "Recife"
+        ibge_code:
+          type: string
+          description: Código IBGE do município
+          example: "2611606"
+      required:
+        - name
+        - ibge_code
+
+    MunicipioPaginado:
+      type: object
+      properties:
+        current_page:
+          type: integer
+          example: 1
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Municipio'
+        first_page_url:
+          type: string
+          example: "http://localhost:8000/api/municipios/PE?page=1"
+        from:
+          type: integer
+          example: 1
+        last_page:
+          type: integer
+          example: 2
+        last_page_url:
+          type: string
+          example: "http://localhost:8000/api/municipios/PE?page=2"
+        links:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                nullable: true
+              label:
+                type: string
+              active:
+                type: boolean
+        next_page_url:
+          type: string
+          nullable: true
+          example: "http://localhost:8000/api/municipios/PE?page=2"
+        path:
+          type: string
+          example: "http://localhost:8000/api/municipios/PE"
+        per_page:
+          type: integer
+          example: 10
+        prev_page_url:
+          type: string
+          nullable: true
+        to:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 15
+
+    Erro:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Mensagem de erro descritiva"
+        error:
+          type: string
+          example: "Descrição detalhada do erro"
+
+tags:
+  - name: Municípios
+    description: Operações relacionadas a municípios brasileiros
