@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --config vite.build.config.js",
+    "build": "vite build --config vite.prod.config.js",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
@@ -21,6 +21,7 @@
     "@vitejs/plugin-vue": "^5.0.3",
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.21.1",
+    "terser": "^5.43.1",
     "vite": "^5.0.12"
   }
 }

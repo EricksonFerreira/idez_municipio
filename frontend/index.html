@@ -5,9 +5,19 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Municípios do Brasil</title>
-  </head>
-  <body>
-    <div id="app"></div>
+    <base href="/" />
+    <!-- Carrega o Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="/src/main.js"></script>
+  </head>
+  <body class="bg-gray-50">
+    <div id="app">
+      <div class="flex items-center justify-center min-h-screen">
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+          <p class="mt-4 text-gray-600">Carregando aplicação...</p>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

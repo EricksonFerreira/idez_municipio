@@ -14,17 +14,44 @@
     <LoadingSpinner v-if="loading && !municipios.length" size="lg" />
 
     <!-- Lista de Municípios -->
-    <MunicipiosList 
-      v-else
-      :municipios="municipios"
-      :estado-sigla="estadoSelecionado"
-      :estado-nome="estadoAtual?.nome || ''"
-      :loading="loading"
-      :loading-more="loadingMore"
-      :has-more="hasMore"
-      :total-municipios="totalMunicipios"
-      @load-more="carregarMaisMunicipios"
-    />
+    <div v-else class="mt-6">
+      <div v-if="municipios.length === 0" class="text-center text-gray-500 py-12">
+        <p>Nenhum município encontrado para o estado selecionado.</p>
+      </div>
+      <div v-else>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold">Municípios de {{ estadoAtual?.nome || '' }}</h2>
+          <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+            {{ totalMunicipios }} municípios
+          </span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div 
+            v-for="municipio in municipios" 
+            :key="municipio.ibge_code"
+            class="p-4 border rounded-lg hover:shadow-md transition-shadow duration-200"
+          >
+            <h3 class="font-medium text-blue-600 truncate">{{ municipio.name }}</h3>
+            <p class="text-sm text-gray-500 mt-1">Código: {{ municipio.ibge_code }}</p>
+            <div class="mt-2 pt-2 border-t border-gray-100">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                {{ estadoSelecionado }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div v-if="hasMore" class="mt-6 text-center">
+          <button 
+            @click="carregarMaisMunicipios"
+            :disabled="loadingMore"
+            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span v-if="!loadingMore">Carregar mais</span>
+            <span v-else>Carregando...</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

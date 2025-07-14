@@ -1,0 +1,23 @@
+{
+  "_vendor.IRYbH52S.js": {
+    "file": "assets/js/vendor.IRYbH52S.js",
+    "name": "vendor"
+  },
+  "_vue.CwvEpeDt.js": {
+    "file": "assets/js/vue.CwvEpeDt.js",
+    "name": "vue"
+  },
+  "index.html": {
+    "file": "assets/js/main.CRMsJ8iV.js",
+    "name": "main",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_vue.CwvEpeDt.js",
+      "_vendor.IRYbH52S.js"
+    ],
+    "css": [
+      "assets/css/main.CexIZqTz.css"
+    ]
+  }
+}

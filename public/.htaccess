@@ -5,21 +5,104 @@
 
     RewriteEngine On
 
-    # Handle Authorization Header
+    # Habilite o cabeçalho de autorização
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Handle X-XSRF-Token Header
+    # Habilite o cabeçalho X-XSRF-Token
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    # Redirecione URLs com barra final para URLs sem barra final
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
+    # Se a requisição for para a API, encaminhe para o Laravel
+    RewriteCond %{REQUEST_URI} ^/api [NC]
     RewriteRule ^ index.php [L]
+
+    # Se o arquivo ou diretório não existir, encaminhe para o index.html do frontend
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ / [L,QSA]
+
+    # Se o arquivo ou diretório não existir, mas a requisição não for para a API, use o index.html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ /index.html [L]
 </IfModule>
+
+# Habilite a compressão GZIP
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# Habilite o cache de navegador
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/x-javascript "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresDefault "access plus 2 days"
+</IfModule>
+
+# Configurações de segurança
+<IfModule mod_headers.c>
+    # Proteção contra clickjacking
+    Header always append X-Frame-Options SAMEORIGIN
+    
+    # Proteção contra XSS
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Previne o MIME type sniffing
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Configuração do CSP (Content Security Policy)
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://buscamunicipio.ericksondevs.tech;"
+    
+    # Habilite o HSTS (HTTP Strict Transport Security)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
+    
+    # Configuração de CORS para a API
+    SetEnvIf Origin "^https://(www\.)?buscamunicipio\.ericksondevs\.tech$" ORIGIN=$0
+    Header set Access-Control-Allow-Origin "%{ORIGIN}e" env=ORIGIN
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, X-XSRF-TOKEN"
+    Header set Access-Control-Allow-Credentials "true"
+    
+    # Configuração de cache para arquivos estáticos
+    <FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+</IfModule>
+
+# Desabilite a listagem de diretórios
+Options -Indexes
+
+# Proteção contra acesso a arquivos ocultos
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Proteção contra acesso a arquivos sensíveis
+<FilesMatch "^(composer\.json|package\.json|webpack\.mix\.js|yarn\.lock|package-lock\.json|.env|.gitignore|.gitattributes|.htaccess|.htpasswd|.user.ini|php.ini|error_log|access_log|error\.log|access\.log)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
