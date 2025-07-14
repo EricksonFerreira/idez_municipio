@@ -5,17 +5,11 @@
     RewriteRule ^api/(.*)$ public/index.php [L]
 
     # Se for um arquivo ou pasta que existe, serve normalmente
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     
     # Redireciona todas as outras requisições para o index.html do frontend
-    RewriteRule (.*) frontend/dist/index.html [L]
-</IfModule>
-
-# Configuração para permitir o roteamento do Vue
-<IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "*"
+    RewriteRule ^(.*)$ /frontend/dist/index.html [L]
 </IfModule>
 
 # Configuração para arquivos estáticos

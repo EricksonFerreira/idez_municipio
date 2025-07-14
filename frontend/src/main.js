@@ -4,9 +4,22 @@ import App from './App.vue'
 import router from './router'
 import './assets/main.css'
 
-const app = createApp(App)
+// Cria e monta a aplicação
+async function initApp() {
+  const app = createApp(App)
+  
+  // Plugins
+  app.use(createPinia())
+  app.use(router)
+  
+  // Monta o app
+  await router.isReady()
+  app.mount('#app')
+  
+  console.log('Aplicação Vue inicializada')
+}
 
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
+// Inicializa a aplicação
+initApp().catch(error => {
+  console.error('Falha ao inicializar a aplicação:', error)
+})

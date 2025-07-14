@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:8000/api' // URL direta para a API
+const API_URL = 'https://buscamunicipio.ericksondevs.tech/api' // URL direta para a API
 
 const municipiosService = {
   async getEstados() {
