@@ -35,22 +35,24 @@ jobs:
     - name: Copiando .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
     
-    - name: Configurando Cache do Composer
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-composer-
-    
+    - name: Verificando versão do Composer
+      run: composer --version
+
     - name: Instalando as Dependências
       run: |
-        composer install -q --no-ansi --no-interaction --no-progress --prefer-dist
-        php artisan key:generate
-    
+        composer self-update
+        composer clear-cache
+        composer install --no-ansi --no-interaction --prefer-dist --optimize-autoloader --no-progress
+        
     - name: Gerando a Chave da Aplicação
-      run: php artisan key:generate
+      run: php artisan key:generate --ansi
+      env:
+        APP_ENV: testing
+        
+    - name: Verificando instalação
+      run: |
+        php -v
+        composer show
     
     - name: Permissões do diretório
       run: chmod -R 777 storage bootstrap/cache
