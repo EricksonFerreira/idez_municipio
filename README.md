@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
   <h1 align="center">API de Municípios Brasileiros</h1>
+  <p align="center">API RESTful para consulta de municípios brasileiros por estado (UF) com suporte a Docker</p>
 </p>
 
 <p align="center">
-  <a href="https://github.com/seu-usuario/municipios-api/actions">
-    <img src="https://github.com/seu-usuario/municipios-api/workflows/tests/badge.svg" alt="Build Status">
+  <a href="https://github.com/EricksonFerreira/municipios-api/actions">
+    <img src="https://github.com/EricksonFerreira/municipios-api/workflows/tests/badge.svg" alt="Build Status">
   </a>
   <a href="https://packagist.org/packages/laravel/framework">
     <img src="https://img.shields.io/packagist/l/laravel/framework" alt="License">
@@ -16,11 +16,69 @@
   <a href="https://laravel.com/docs/10.x">
     <img src="https://img.shields.io/badge/Laravel-10.x-FF2D20?logo=laravel&logoColor=white" alt="Laravel Version">
   </a>
+  <a href="https://www.docker.com/">
+    <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" alt="Docker">
+  </a>
 </p>
+
+## 🚀 Começando
+
+### Pré-requisitos
+
+- Docker e Docker Compose instalados
+- Git (opcional, apenas para clonar o repositório)
+
+### Instalação com Docker
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/EricksonFerreira/idez_municipio.git
+   cd idez_municipio
+   ```
+
+2. Crie o arquivo `.env` baseado no `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Inicie os contêineres:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. Instale as dependências do Composer:
+   ```bash
+   docker-compose exec app composer install
+   ```
+
+5. Gere a chave da aplicação:
+   ```bash
+   docker-compose exec app php artisan key:generate
+   ```
+
+6. Acesse a aplicação em:
+   - API: http://localhost:8000
+
+### Comandos úteis
+
+- Parar os contêineres:
+  ```bash
+  docker-compose down
+  ```
+
+- Ver logs da aplicação:
+  ```bash
+  docker-compose logs -f app
+  ```
+
+- Acessar o terminal do container da aplicação:
+  ```bash
+  docker-compose exec app bash
+  ```
 
 ## 📋 Sobre o Projeto
 
-API para consulta de municípios brasileiros por Unidade Federativa (UF), desenvolvida com Laravel. Esta API permite consultar municípios de qualquer estado brasileiro, com suporte a paginação e cache.
+Esta é uma API RESTful desenvolvida em Laravel 12 que fornece informações sobre municípios brasileiros por estado (UF). A API consome dados de fontes externas (IBGE e BrasilAPI) e os disponibiliza em um formato padronizado, com suporte a paginação e cache para melhor desempenho.
 
 ### 🚀 Funcionalidades
 
@@ -50,8 +108,8 @@ API para consulta de municípios brasileiros por Unidade Federativa (UF), desenv
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/municipios-api.git
-   cd municipios-api
+   git clone https://github.com/EricksonFerreira/idez_municipio.git
+   cd idez_municipio
    ```
 
 2. Instale as dependências:
@@ -87,18 +145,13 @@ php artisan test
 
 ## 📚 Documentação da API
 
-A documentação completa da API está disponível no formato OpenAPI (Swagger). Você pode visualizá-la de duas formas:
+A documentação interativa da API está disponível em `/docs` após a instalação. A documentação é gerada automaticamente a partir das anotações do código-fonte. OpenAPI (Swagger). Você pode visualizá-la de duas formas:
 
-1. **Visualizar online**: Importe o arquivo `docs/openapi.yaml` em ferramentas como:
+ **Visualizar online**: Importe o arquivo `docs/openapi.yaml` em ferramentas como:
    - [Swagger Editor](https://editor.swagger.io/)
    - [Stoplight Studio](https://stoplight.io/studio/)
    - [Redocly](https://redocly.github.io/redoc/)
-
-2. **Documentação interativa**: Após iniciar o servidor, acesse:
-   ```
-   http://localhost:8000/docs
-   ```
-   > Nota: Requer a instalação do pacote L5-Swagger ou similar
+ 
 
 ### 📝 Endpoints
 
