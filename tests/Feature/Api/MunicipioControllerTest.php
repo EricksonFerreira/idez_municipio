@@ -53,7 +53,7 @@ test('retorna 400 para formato de UF inválido', function () {
 
     $response->assertStatus(400)
         ->assertJson([
-            'error' => 'Invalid UF format. Must be a 2-letter state code (e.g., SP, RJ, PE).'
+            'error' => 'Formato de UF inválido. Deve ser um código de estado de 2 letras (ex: SP, RJ, PE).'
         ]);
 });
 
@@ -67,7 +67,7 @@ test('retorna 404 para UF não encontrada', function () {
     $response = $this->getJson('/api/municipios/XX');
     
     $response->assertStatus(404)
-        ->assertJson(['message' => 'No municipalities found for the given UF']);
+        ->assertJson(['message' => 'Nenhum município encontrado para o estado selecionado']);
 });
 
 test('retorna municípios paginados corretamente', function () {

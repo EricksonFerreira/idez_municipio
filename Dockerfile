@@ -8,44 +8,41 @@ RUN composer install \
     --no-interaction \
     --no-plugins \
     --no-scripts \
-    --prefer-dist
+    --prefer-dist \
+    --no-dev
 
 # Estágio de produção
-FROM php:8.1-fpm
+FROM php:8.2-cli
 
-# Instala dependências do sistema
+# Instala dependências do sistema mínimas
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
+    libzip-dev \
     zip \
     unzip \
-    libzip-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install zip
 
-# Instala Node.js e NPM
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
-    && apt-get install -y nodejs
+# Instala o servidor web embutido do PHP
+RUN apt-get update && apt-get install -y wget
 
-# Configuração do PHP
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
-
-# Configuração do diretório de trabalho
+# Cria diretório para o aplicativo
 WORKDIR /var/www
 
-# Copia os arquivos da aplicação
+# Copia os arquivos do estágio de build
 COPY --from=builder /app /var/www
-COPY --from=builder /usr/bin/composer /usr/bin/composer
 
 # Configura permissões
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN chown -R www-data:www-data \
+    /var/www/storage \
+    /var/www/bootstrap/cache
 
-# Instala dependências do frontend (se necessário)
-# RUN npm install && npm run production
+# Configura o PHP
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-# Gera a chave da aplicação
-RUN php artisan key:generate
+# Expõe a porta 8000
+EXPOSE 8000
 
-# Expõe a porta 9000 e inicia o php-fpm
-EXPOSE 9000
-CMD ["php-fpm"]
+# Cria um arquivo SQLite vazio se não existir
+RUN touch /var/www/database/database.sqlite
+
+# Comando para iniciar o servidor embutido do PHP
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]

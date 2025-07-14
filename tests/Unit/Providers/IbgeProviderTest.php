@@ -45,7 +45,7 @@ class IbgeProviderTest extends TestCase
         ]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Failed to fetch municipalities from IBGE: 500');
+        $this->expectExceptionMessage('Erro ao buscar municípios: 500');
         
         $this->provider->getMunicipios('PE');
     }

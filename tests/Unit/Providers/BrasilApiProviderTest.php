@@ -45,7 +45,7 @@ class BrasilApiProviderTest extends TestCase
         ]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Error fetching municipalities: Failed to fetch municipalities: 500');
+        $this->expectExceptionMessage('Erro ao buscar municípios: 500');
         
         $this->provider->getMunicipios('PE');
     }
