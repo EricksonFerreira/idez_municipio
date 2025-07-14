@@ -25,30 +25,42 @@
             {{ totalMunicipios }} municípios
           </span>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <div 
-            v-for="municipio in municipios" 
-            :key="municipio.ibge_code"
-            class="p-4 border rounded-lg hover:shadow-md transition-shadow duration-200"
-          >
-            <h3 class="font-medium text-blue-600 truncate">{{ municipio.name }}</h3>
-            <p class="text-sm text-gray-500 mt-1">Código: {{ municipio.ibge_code }}</p>
-            <div class="mt-2 pt-2 border-t border-gray-100">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                {{ estadoSelecionado }}
-              </span>
+        
+        <div class="relative">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div 
+              v-for="municipio in municipios" 
+              :key="municipio.ibge_code"
+              class="p-4 border rounded-lg hover:shadow-md transition-shadow duration-200"
+            >
+              <h3 class="font-medium text-blue-600 truncate">{{ municipio.name }}</h3>
+              <p class="text-sm text-gray-500 mt-1">Código: {{ municipio.ibge_code }}</p>
+              <div class="mt-2 pt-2 border-t border-gray-100">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  {{ estadoSelecionado }}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div v-if="hasMore" class="mt-6 text-center">
-          <button 
-            @click="carregarMaisMunicipios"
-            :disabled="loadingMore"
-            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          
+          <!-- Elemento de observação para o scroll infinito -->
+          <div 
+            ref="loadMoreTrigger"
+            class="h-1 w-full"
+          ></div>
+          
+          <LoadingSpinner 
+            v-if="loadingMore" 
+            size="md" 
+            class="my-4" 
+          />
+          
+          <div 
+            v-if="!hasMore && municipios.length > 0" 
+            class="text-center text-gray-500 py-6 text-sm border-t border-gray-100 mt-4"
           >
-            <span v-if="!loadingMore">Carregar mais</span>
-            <span v-else>Carregando...</span>
-          </button>
+            <p>Você viu todos os {{ totalMunicipios }} municípios</p>
+          </div>
         </div>
       </div>
     </div>
@@ -56,10 +68,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import municipiosService from '@/services/municipiosService'
 import EstadoSelector from '@/components/EstadoSelector.vue'
-import MunicipiosList from '@/components/MunicipiosList.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
 // Dados reativos
@@ -72,6 +83,8 @@ const currentPage = ref(1)
 const lastPage = ref(1)
 const totalMunicipios = ref(0)
 const hasMore = ref(true)
+const loadMoreTrigger = ref(null)
+let observer = null
 // Estado atual selecionado
 const estadoAtual = computed(() => 
   estados.value.find(e => e.sigla === estadoSelecionado.value) || null
@@ -85,11 +98,40 @@ onMounted(async () => {
     // Ordena os estados por nome
     const estadosOrdenados = Object.entries(data).map(([sigla, nome]) => ({ sigla, nome }));
     estados.value = estadosOrdenados.sort((a, b) => a.nome.localeCompare(b.nome))
+    
+    // Configura o Intersection Observer
+    setupIntersectionObserver()
   } catch (error) {
     console.error('Erro ao carregar estados:', error)
     alert('Erro ao carregar a lista de estados. Tente novamente.')
   } finally {
     loading.value = false
+  }
+})
+
+// Configura o Intersection Observer para carregar mais itens
+function setupIntersectionObserver() {
+  // Cria um novo Intersection Observer
+  observer = new IntersectionObserver((entries) => {
+    const firstEntry = entries[0]
+    if (firstEntry.isIntersecting && hasMore.value && !loadingMore.value && !loading.value) {
+      carregarMaisMunicipios()
+    }
+  }, {
+    threshold: 0.1, // Dispara quando 10% do elemento estiver visível
+    rootMargin: '200px' // Carrega 200px antes de chegar no final
+  })
+
+  // Observa o elemento de trigger
+  if (loadMoreTrigger.value) {
+    observer.observe(loadMoreTrigger.value)
+  }
+}
+
+// Limpa o observer quando o componente for desmontado
+onBeforeUnmount(() => {
+  if (observer) {
+    observer.disconnect()
   }
 })
 
