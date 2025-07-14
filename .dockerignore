@@ -1,0 +1,60 @@
+# Dependências do Node
+/node_modules
+/public/hot
+/public/storage
+/public/vendor
+
+# Dependências do Composer
+/vendor
+
+# Ambiente e configurações
+/.env
+/.env.*.local
+/.env.local
+/.env.testing
+/.phpunit.result.cache
+/docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+# IDE e editores
+.idea
+.vscode
+*.sublime-*/
+*.sublime-*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+/storage/*.key
+/storage/logs/*
+
+# Cache
+bootstrap/cache/*
+
+# Testes
+/coverage
+
+# Build
+/public/build
+/public/mix-manifest.json
+
+# Docker
+Dockerfile
+docker-compose.yml
+.docker
+
+# Git
+.git
+.gitattributes
+.github
+.gitignore
+
+# Outros
+*.log
+*.sql
+*.sqlite
