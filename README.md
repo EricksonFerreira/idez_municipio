@@ -19,13 +19,34 @@
   <a href="https://www.docker.com/">
     <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" alt="Docker">
   </a>
+  <a href="https://vitejs.dev/">
+    <img src="https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white" alt="Vite">
+  </a>
+  <a href="https://vuejs.org/">
+    <img src="https://img.shields.io/badge/Vue.js-4FC08D?logo=vuedotjs&logoColor=white" alt="Vue.js">
+  </a>
 </p>
+
+## 🌐 Frontend Vue.js
+
+O projeto inclui um frontend Vue.js moderno para visualização dos municípios brasileiros. O frontend é servido na porta 3000 e se comunica com a API na porta 8000.
+
+### Acessando o Frontend
+
+Com o Docker em execução, acesse:
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- API: [http://localhost:8000](http://localhost:8000)
+
+### Documentação do Frontend
+
+Para mais detalhes sobre a estrutura e como desenvolver o frontend, consulte o [README do Frontend](./frontend/README.md).
 
 ## 🚀 Começando
 
 ### Pré-requisitos
 
 - Docker e Docker Compose instalados
+- Node.js 16+ (apenas para desenvolvimento do frontend)
 - Git (opcional, apenas para clonar o repositório)
 
 ### Instalação com Docker
@@ -56,7 +77,15 @@
    docker-compose exec app php artisan key:generate
    ```
 
-6. Acesse a aplicação em:
+6. Instale as dependências do frontend e inicie o servidor de desenvolvimento:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+7. Acesse as aplicações em:
+   - Frontend: http://localhost:3000
    - API: http://localhost:8000
 
 ### Comandos úteis
@@ -75,6 +104,43 @@
   ```bash
   docker-compose exec app bash
   ```
+
+## 🖥️ Frontend Vue.js
+
+O frontend é uma aplicação Vue.js 3 com as seguintes características:
+
+### 📦 Principais Dependências
+
+- Vue 3 com Composition API
+- Axios para requisições HTTP
+- Tailwind CSS para estilização
+- Vue Router para navegação
+- Lodash para utilitários
+
+### 🎨 Recursos
+
+- Interface responsiva e moderna
+- Lista de municípios em grid com 4 colunas
+- Scroll infinito com carregamento automático
+- Filtro por estado (UF)
+- Exibição de código IBGE e informações detalhadas
+- Animações e transições suaves
+
+### 🛠️ Comandos Úteis
+
+```bash
+# Instalar dependências
+npm install
+
+# Iniciar servidor de desenvolvimento
+npm run dev
+
+# Compilar para produção
+npm run build
+
+# Executar testes
+npm run test
+```
 
 ## 📋 Sobre o Projeto
 
