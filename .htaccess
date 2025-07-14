@@ -2,7 +2,6 @@
     RewriteEngine On
     
     # Redireciona para a API se começar com /api
-    RewriteCond %{REQUEST_URI} ^/api/
     RewriteRule ^api/(.*)$ public/index.php [L]
 
     # Se for um arquivo ou pasta que existe, serve normalmente
@@ -11,5 +10,15 @@
     RewriteRule ^ - [L]
     
     # Redireciona todas as outras requisições para o index.html do frontend
-    RewriteRule ^ frontend/dist/index.html [L]
+    RewriteRule (.*) frontend/dist/index.html [L]
 </IfModule>
+
+# Configuração para permitir o roteamento do Vue
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# Configuração para arquivos estáticos
+<FilesMatch "\.(js|css|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>
