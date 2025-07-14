@@ -6,9 +6,10 @@
     RewriteRule ^api/(.*)$ public/index.php [L]
 
     # Se for um arquivo ou pasta que existe, serve normalmente
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
     
-    # Redireciona todas as outras requisições para o frontend
-    RewriteRule ^(.*)$ frontend/dist/index.html [L]
+    # Redireciona todas as outras requisições para o index.html do frontend
+    RewriteRule ^ frontend/dist/index.html [L]
 </IfModule>

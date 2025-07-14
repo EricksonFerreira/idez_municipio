@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
 export default defineConfig({
-  base: '/frontend/dist/',
+  base: './',  // Usando caminho relativo
   plugins: [vue()],
   resolve: {
     alias: {
