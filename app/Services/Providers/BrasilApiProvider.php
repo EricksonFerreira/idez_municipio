@@ -24,11 +24,11 @@ class BrasilApiProvider implements MunicipioProviderInterface
                 })->filter()->toArray();
             }
 
-            throw new \RuntimeException("Failed to fetch municipalities: " . $response->status());
+            throw new \RuntimeException("Erro ao buscar municípios: " . $response->status());
 
         } catch (\Exception $e) {
             // Log the error or handle it as needed
-            throw new \RuntimeException("Error fetching municipalities: " . $e->getMessage());
+            throw new \RuntimeException("Erro ao buscar municípios: " . $e->getMessage());
         }
     }
 }

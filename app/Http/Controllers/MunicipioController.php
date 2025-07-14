@@ -18,7 +18,7 @@ class MunicipioController extends Controller
             $uf = strtoupper(trim($uf));
             if (strlen($uf) !== 2) {
                 return response()->json([
-                    'error' => 'Invalid UF format. Must be a 2-letter state code (e.g., SP, RJ, PE).'
+                    'error' => 'Formato de UF inválido. Deve ser um código de estado de 2 letras (ex: SP, RJ, PE).'
                 ], 400);
             }
             
@@ -30,7 +30,7 @@ class MunicipioController extends Controller
             // Verifica se há municípios para a UF
             if (empty($data)) {
                 return response()->json([
-                    'message' => 'No municipalities found for the given UF'
+                    'message' => 'Nenhum município encontrado para o estado selecionado'
                 ], 404);
             }
     
@@ -53,10 +53,10 @@ class MunicipioController extends Controller
             return response()->json($paginated);
     
         } catch (\RuntimeException $e) {
-            Log::error('Error in MunicipioController: ' . $e->getMessage());
+            Log::error('Erro no MunicipioController: ' . $e->getMessage());
             throw new ExternalApiException($e->getMessage());
         } catch (\Throwable $e) {
-            Log::error('Unexpected error in MunicipioController: ' . $e->getMessage());
+            Log::error('Erro no MunicipioController: ' . $e->getMessage());
             throw new ExternalApiException('Erro ao consultar a API de municípios');
         }
     }
