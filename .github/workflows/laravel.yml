@@ -58,10 +58,14 @@ jobs:
     - name: Permissões do diretório
       run: chmod -R 777 storage bootstrap/cache
     
-    - name: Criando o Banco de Dados
+    - name: Criando o Banco de Dados e Usuário
       run: |
+        # Criar o banco de dados
         mysql -h 127.0.0.1 -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS test_db;"
-        mysql -h 127.0.0.1 -u root -ppassword -e "GRANT ALL PRIVILEGES ON test_db.* TO 'test_user'@'%' IDENTIFIED BY 'password';"
+        # Criar o usuário e conceder permissões
+        mysql -h 127.0.0.1 -u root -ppassword -e "CREATE USER IF NOT EXISTS 'test_user'@'%' IDENTIFIED BY 'password';"
+        mysql -h 127.0.0.1 -u root -ppassword -e "GRANT ALL PRIVILEGES ON test_db.* TO 'test_user'@'%';"
+        mysql -h 127.0.0.1 -u root -ppassword -e "FLUSH PRIVILEGES;"
     
     - name: Executando os Testes (Unit and Feature tests) via PHPUnit
       env:
