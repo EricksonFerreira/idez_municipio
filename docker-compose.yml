@@ -16,49 +16,28 @@ services:
       - "APP_DEBUG=true"
       - "APP_KEY="
       - "APP_URL=http://localhost:8000"
-      
-      - "DB_CONNECTION=mysql"
-      - "DB_HOST=db"
-      - "DB_PORT=3306"
-      - "DB_DATABASE=${DB_DATABASE:-municipios}"
-      - "DB_USERNAME=${DB_USERNAME:-laravel}"
-      - "DB_PASSWORD=${DB_PASSWORD:-secret}"
-      
+      - "DB_CONNECTION=sqlite"
       - "MUNICIPIOS_PROVIDER=ibge"
       - "MUNICIPIOS_VERIFY_SSL=true"
-    depends_on:
-      - db
+      - "FRONTEND_URL=http://localhost:3000"
+    ports:
+      - "8000:8000"
     networks:
       - municipios-network
 
-  db:
-    image: mysql:8.0
-    container_name: municipios-api-db
-    restart: unless-stopped
+  frontend:
+    container_name: municipios-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-municipios}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
-      MYSQL_USER: ${DB_USERNAME:-laravel}
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
-    volumes:
-      - dbdata:/var/lib/mysql/
-      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-    ports:
-      - "${DB_PORT:-3306}:3306"
-    networks:
-      - municipios-network
-
-  nginx:
-    image: nginx:alpine
-    container_name: municipios-api-nginx
-    restart: unless-stopped
-    ports:
-      - "8000:80"
-    volumes:
-      - ./:/var/www
-      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8000/api
     depends_on:
       - app
     networks:
@@ -79,7 +58,5 @@ networks:
     driver: bridge
 
 volumes:
-  dbdata:
-    driver: local
   redisdata:
     driver: local
